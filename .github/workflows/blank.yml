@@ -1,0 +1,67 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@rajashekar1410 
+rajashekar1410
+/
+zero_edast_scan2
+Private
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+Insights
+Settings
+zero_edast_scan2/.github/workflows/DAST.yml
+@rajashekar1410
+rajashekar1410 Create DAST.yml
+Latest commit f15393d 20 hours ago
+ History
+ 1 contributor
+39 lines (32 sloc)  1.48 KB
+   
+# This is a basic workflow to help you get started with Actions
+
+name: CD
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Setting Fortify FQDN
+      - name: Setting FQDN address
+        run: |
+            export RUNNER_ALLOW_RUNASROOT="1"
+            export AGENT_ALLOW_RUNASROOT="1"
+            sudo echo "54.81.210.80 fortify.cyberxdemo.com" | sudo tee -a /etc/hosts
+      # Runs a single command using the runners shell
+      
+      - name: eDAST Scan 
+        run: |
+          echo starting eDAST Scan
+          curl --location --request POST "https://fortify.cyberxdemo.com:11443/api/v2/scans/start-scan-cicd" --header "Authorization: FORTIFYTOKEN NTE2MTQ3ZTUtMTVlZS00ZjAxLWE5N2EtMDBhYjBiMGE1ODlk" --header "Content-Type: application/json" --data-raw '{"cicdToken": "09f47e39-a5fb-4c28-9ea4-ab7588fb3097"}'
